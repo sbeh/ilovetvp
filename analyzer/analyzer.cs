@@ -22,7 +22,7 @@ namespace ilovetvp
 
             db.Open();
 
-            var regexp_gamelog = new Regex(@"\[A-Z0-9]+$", RegexOptions.Compiled);
+            var regexp_gamelog = new Regex(@"\\[A-Z0-9]+$", RegexOptions.Compiled);
             foreach (var log in Directory.GetFiles(gamelogs))
             {
                 Debug.Assert(log.StartsWith(gamelogs));
