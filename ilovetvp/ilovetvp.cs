@@ -16,13 +16,10 @@ namespace ilovetvp
                 Util.debug(@"Connect");
                 try
                 {
-                    connection = new TcpClient(
-#if DEBUG
-                        @"localhost",
-#else
-                        @"ilovetvp.serverstaff.de",
-#endif
-                        47616);
+                    connection = new TcpClient();
+                    connection.ReceiveTimeout = 15;
+                    connection.SendTimeout = 15;
+                    connection.Connect(@"ilovetvp.serverstaff.de", 47616);
                 }
                 catch (Exception e)
                 {
@@ -141,13 +138,10 @@ namespace ilovetvp
                     while (connection == null)
                     {
                         Util.debug(@"Reconnect");
-                        connection = new TcpClient(
-#if DEBUG
-                            @"localhost",
-#else
-                            @"ilovetvp.serverstaff.de",
-#endif
-                            47616);
+                        connection = new TcpClient();
+                        connection.ReceiveTimeout = 15;
+                        connection.SendTimeout = 15;
+                        connection.Connect(@"ilovetvp.serverstaff.de", 47616);
                     }
                 }
             };

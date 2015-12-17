@@ -14,11 +14,7 @@ namespace ilovetvp
 
         static void Main()
         {
-#if DEBUG
-            var gamelogs = @"C:\Users\User\Documents\Visual Studio 2015\Projects\ilovetvp\server\bin\Debug";
-#else
             var gamelogs = Environment.CurrentDirectory;
-#endif
 
             db.Open();
 
@@ -43,13 +39,7 @@ namespace ilovetvp
             gamelogs_watcher.EnableRaisingEvents = true;
 
             var http = new HttpListener();
-            http.Prefixes.Add(
-#if DEBUG
-                @"http://localhost:47617/"
-#else
-                @"http://ilovetvp.serverstaff.de:47617/"
-#endif
-            );
+            http.Prefixes.Add(@"http://ilovetvp.serverstaff.de:47617/");
             http.Start();
             AsyncCallback callback = null;
             callback = result =>
@@ -89,11 +79,7 @@ namespace ilovetvp
 
                 if(param.Equals(@"/site.html") || param.Equals(@"/smoothie.js"))
                 {
-                    response.Close(System.IO.File.ReadAllBytes(
-#if DEBUG
-                        @"..\..\" +
-#endif
-                        param.Substring(1)), false);
+                    response.Close(System.IO.File.ReadAllBytes(param.Substring(1)), false);
                 }
                 else if(param.Equals(@"/oneshot"))
                 {
