@@ -46,6 +46,7 @@ namespace ilovetvp
 
     class CombatEvent : Event
     {
+#if !NO_DB
         static SqlCommand insert = new SqlCommand(@"INSERT INTO Event (Character, Timestamp, Type) OUTPUT INSERTED.ID VALUES (@character, @timestamp, 1)", analyzer.db);
         static SqlCommand insertCombat = new SqlCommand(@"INSERT INTO Event_Combat (ID, Damage, Enemy, Weapon) VALUES (@id, @damage, @enemy, @weapon)", analyzer.db);
         static CombatEvent()
@@ -57,6 +58,7 @@ namespace ilovetvp
             insertCombat.Parameters.Add(@"@enemy", SqlDbType.NVarChar, 80);
             insertCombat.Parameters.Add(@"@weapon", SqlDbType.NVarChar, 40);
         }
+#endif
 
         public int damage;
         public string enemy;
@@ -64,6 +66,7 @@ namespace ilovetvp
 
         public override void persist()
         {
+#if !NO_DB
             lock(analyzer.db)
             {
                 insert.Parameters[@"@character"].Value = character.id;
@@ -82,6 +85,7 @@ namespace ilovetvp
                 if (insertCombat.ExecuteNonQuery() != 1)
                     throw new Exception(@"Failed to execute statement: " + insertCombat.CommandText);
             }
+#endif
         }
 
         public override string ToString()
@@ -92,17 +96,20 @@ namespace ilovetvp
 
     class UnknownEvent : Event
     {
+#if !NO_DB
         static SqlCommand insert = new SqlCommand(@"INSERT INTO Event (Character, Type, Message) OUTPUT INSERTED.ID VALUES (@character, 0, @message)", analyzer.db);
         static UnknownEvent()
         {
             insert.Parameters.Add(@"@character", SqlDbType.Int);
             insert.Parameters.Add(@"@message", SqlDbType.NText, (int)Math.Pow(2, 30) - 1);
         }
+#endif
 
         public string message;
 
         public override void persist()
         {
+#if !NO_DB
             lock (analyzer.db)
             {
                 insert.Parameters[@"@character"].Value = character.id;
@@ -110,6 +117,7 @@ namespace ilovetvp
                 insert.Prepare();
                 id = (int)insert.ExecuteScalar();
             }
+#endif
         }
 
         public override string ToString()

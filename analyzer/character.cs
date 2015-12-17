@@ -8,6 +8,7 @@ namespace ilovetvp
 {
     class Character
     {
+#if !NO_DB
         static SqlCommand search = new SqlCommand(@"SELECT ID FROM Character WHERE Name = @name", analyzer.db);
         static SqlCommand insert = new SqlCommand(@"INSERT INTO Character (Name) OUTPUT INSERTED.ID VALUES (@name)", analyzer.db);
         static Character()
@@ -17,6 +18,7 @@ namespace ilovetvp
         }
 
         public int id;
+#endif
         public string name;
         private IPEndPoint _endpoint;
         public IPEndPoint endpoint
@@ -39,6 +41,7 @@ namespace ilovetvp
         {
             this.name = name;
 
+#if !NO_DB
             lock(analyzer.db)
             {
                 // start searching database for character name
@@ -53,6 +56,7 @@ namespace ilovetvp
                 }
                 id = (int)res;
             }
+#endif
         }
 
         #region Event

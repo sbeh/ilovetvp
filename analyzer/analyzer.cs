@@ -10,13 +10,17 @@ namespace ilovetvp
 {
     class analyzer
     {
+#if !NO_DB
         public static SqlConnection db = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=ilovetvp;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+#endif
 
         static void Main()
         {
             var gamelogs = Environment.CurrentDirectory;
 
+#if !NO_DB
             db.Open();
+#endif
 
             var regexp_gamelog = new Regex(@"\\[A-Z0-9]+$", RegexOptions.Compiled);
             foreach (var log in Directory.GetFiles(gamelogs))
