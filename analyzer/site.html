@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <title>ilovetvp</title>
+        <script type="text/javascript" src="smoothie.js"></script>
+        <script type="text/javascript">
+            var last_date = 0;
+            var last_damage = 0;
+            var avg_damage = 0;
+            var http = new XMLHttpRequest();
+
+            function request() {
+                http.open('GET', 'oneshot');
+                http.send();
+            }
+
+            window.onload = function () {
+                var graph = new SmoothieChart({ millisPerPixel: 100, interpolation: 'linear', grid: { millisPerLine: 5000, verticalSections: 7, borderVisible: false }, minValue: 0 });
+                graph.streamTo(document.getElementById('graph'));
+
+                var dps = new TimeSeries();
+                graph.addTimeSeries(dps);
+
+                http.onreadystatechange = function () {
+                    if (http.readyState == 4) {
+                        if (http.status == 200) {
+                            var curr_date = new Date().getTime();
+                            var curr_damage = parseInt(http.responseText);
+                            document.getElementById('status').innerHTML = '';
+
+                            var diff_date = curr_date - last_date;
+                            var diff_damage = (curr_damage - last_damage) * 1000 / diff_date;
+
+                            last_date = curr_date;
+                            last_damage = curr_damage;
+
+                            if (diff_date > 15000 /*average over 30 seconds*/)
+                                avg_damage = diff_damage;
+                            else
+                                avg_damage = ((15000 - diff_date) * avg_damage + diff_date * diff_damage) / 15000;
+
+                            dps.append(last_date, avg_damage);
+
+                        }
+
+                        setTimeout(request, 100);
+                    }
+                };
+                request();
+
+                if (typeof CCPEVE === 'undefined')
+                    return;
+
+                document.getElementById('status').innerHTML = 'Waiting for user to set this website as trustworthy.';
+
+                CCPEVE.requestTrust(window.location.href);
+            };
+        </script>
+    </head>
+    <body>
+        <div id="status">Please open this website in your EVE client's browser.</div>
+        <canvas id="graph" width="600" height="250"></canvas>
+    </body>
+</html>
