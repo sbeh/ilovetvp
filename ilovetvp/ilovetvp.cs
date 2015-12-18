@@ -17,7 +17,6 @@ namespace ilovetvp
                 try
                 {
                     connection = new TcpClient();
-                    connection.ReceiveTimeout = 15;
                     connection.SendTimeout = 15;
                     connection.Connect(@"ilovetvp.serverstaff.de", 47616);
                 }
@@ -142,7 +141,6 @@ namespace ilovetvp
                     {
                         Util.debug(@"Reconnect");
                         connection = new TcpClient();
-                        connection.ReceiveTimeout = 15;
                         connection.SendTimeout = 15;
                         connection.Connect(@"ilovetvp.serverstaff.de", 47616);
                     }
