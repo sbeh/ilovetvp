@@ -120,6 +120,7 @@ namespace ilovetvp
 
                     try
                     {
+                        connection.GetStream().Close();
                         connection.Close();
                     }
                     catch { }
