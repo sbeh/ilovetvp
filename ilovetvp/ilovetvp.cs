@@ -23,6 +23,8 @@ namespace ilovetvp
                 }
                 catch (Exception e)
                 {
+                    connection = null;
+
                     Util.debug(@"Connect failed: {0}", e.Message);
                 }
             }
