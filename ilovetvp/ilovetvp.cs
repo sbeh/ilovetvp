@@ -140,9 +140,19 @@ namespace ilovetvp
                     while (connection == null)
                     {
                         Util.debug(@"Reconnect");
-                        connection = new TcpClient();
-                        connection.SendTimeout = 15;
-                        connection.Connect(@"ilovetvp.serverstaff.de", 47616);
+
+                        try
+                        {
+                            connection = new TcpClient();
+                            connection.SendTimeout = 15;
+                            connection.Connect(@"ilovetvp.serverstaff.de", 47616);
+                        }
+                        catch (Exception e)
+                        {
+                            connection = null;
+
+                            Util.debug(@"Connect failed: {0}", e.Message);
+                        }
                     }
                 }
             };
