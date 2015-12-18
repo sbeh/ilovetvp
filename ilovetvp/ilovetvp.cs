@@ -125,6 +125,7 @@ namespace ilovetvp
                         connection.Close();
                     }
                     catch { }
+                    connection = null;
 
                     foreach (var gamelog in gamelogs)
                         try
@@ -136,7 +137,6 @@ namespace ilovetvp
                     lock(gamelogs)
                         gamelogs.Clear();
 
-                    connection = null;
                     while (connection == null)
                     {
                         Util.debug(@"Reconnect");
