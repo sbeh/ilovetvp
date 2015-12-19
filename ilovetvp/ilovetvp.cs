@@ -147,11 +147,11 @@ namespace ilovetvp
                             connection.SendTimeout = 15;
                             connection.Connect(@"ilovetvp.serverstaff.de", 47616);
                         }
-                        catch (Exception e)
+                        catch (Exception exc)
                         {
                             connection = null;
 
-                            Util.debug(@"Connect failed: {0}", e.Message);
+                            Util.debug(@"Connect failed: {0}", exc.Message);
                         }
                     }
                 }
