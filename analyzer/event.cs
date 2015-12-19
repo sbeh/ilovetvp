@@ -1,6 +1,8 @@
 ﻿using System;
+#if !NO_DB
 using System.Data;
 using System.Data.SqlClient;
+#endif
 using System.Globalization;
 using System.Text.RegularExpressions;
 
