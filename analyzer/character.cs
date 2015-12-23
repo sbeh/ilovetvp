@@ -94,12 +94,21 @@ namespace ilovetvp
                 // character not yet loaded into memory
             }
 
+            lock(characters)
+            {
+                try
+                {
+                    return characters[name];
+                }
+                catch { }
+
             Util.debug(@"{0} | New Character", name);
 
             // create singleton
             var character = new Character(name);
             characters.Add(character.name, character);
             return character;
+            }
         }
         #endregion
     }
