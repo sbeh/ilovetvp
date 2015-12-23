@@ -102,12 +102,12 @@ namespace ilovetvp
                 }
                 catch { }
 
-            Util.debug(@"{0} | New Character", name);
+                Util.debug(@"{0} | New Character", name);
 
-            // create singleton
-            var character = new Character(name);
-            characters.Add(character.name, character);
-            return character;
+                // create singleton
+                var character = new Character(name);
+                characters.Add(character.name, character);
+                return character;
             }
         }
         #endregion
