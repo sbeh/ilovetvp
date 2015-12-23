@@ -25,7 +25,7 @@ namespace ilovetvp
                 ret = new CombatEvent()
                 {
                     character = character,
-                    timestamp = DateTime.ParseExact(match_shot.Groups[@"timestamp"].Value, @"yyyy.MM.dd HH:mm:ss", CultureInfo.InvariantCulture),
+                    timestamp = DateTime.SpecifyKind(DateTime.ParseExact(match_shot.Groups[@"timestamp"].Value, @"yyyy.MM.dd HH:mm:ss", CultureInfo.InvariantCulture), DateTimeKind.Utc),
                     damage = int.Parse(match_shot.Groups[@"damage"].Value),
                     enemy = match_shot.Groups[@"enemy"].Value,
                     weapon = match_shot.Groups[@"weapon"].Value,
