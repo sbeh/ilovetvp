@@ -85,7 +85,7 @@ namespace ilovetvp
                 {
                     response.Close(System.IO.File.ReadAllBytes(param.Substring(1)), false);
                 }
-                else if(param.Equals(@"/oneshot"))
+                else if(param.Equals(@"/oneshot") && request.Headers[@"EVE_CHARNAME"] != null)
                 {
                     var character = Character.get(request.Headers[@"EVE_CHARNAME"]);
                     character.endpoint = endpoint;
