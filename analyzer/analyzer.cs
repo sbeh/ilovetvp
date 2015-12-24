@@ -1,5 +1,7 @@
 ﻿using System;
+#if !NO_DB
 using System.Data.SqlClient;
+#endif
 using System.Diagnostics;
 using System.IO;
 using System.Net;
