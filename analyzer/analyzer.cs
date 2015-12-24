@@ -94,8 +94,23 @@ namespace ilovetvp
                     callback = evs =>
                     {
                         try {
-                            response.Close(Encoding.UTF8.GetBytes(character.damage.ToString()), false);
                             character.EventAdded -= callback;
+
+                            if (evs != null)
+                            {
+                                var json = new StringBuilder();
+                                json.Append(@"[[""timestamp"",""weapon"",""damage""]");
+                                Array.ForEach(evs, ev =>
+                                {
+                                    if (ev is CombatEvent)
+                                        json.AppendFormat(@",[""{0:O}"",{1},""{2}""]", ev.timestamp, ((CombatEvent)ev).damage, ((CombatEvent)ev).weapon);
+                                });
+                                json.Append(@"]");
+                                response.ContentType = @"application/json";
+                                response.Close(Encoding.UTF8.GetBytes(json.ToString()), false);
+                            }
+                            else
+                                response.Close();
                         }
                         catch (Exception ex)
                         {

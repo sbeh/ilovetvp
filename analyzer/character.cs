@@ -35,7 +35,6 @@ namespace ilovetvp
                 return _endpoint;
             }
         }
-        public int damage;
 
         private Character(string name)
         {
@@ -69,12 +68,6 @@ namespace ilovetvp
             while (events.Count >= 200)
                 events.Pop();
             events.Push(e);
-
-            try
-            {
-                damage += ((CombatEvent)e).damage;
-            }
-            catch { }
 
             var listener = EventAdded;
             if (listener != null)
