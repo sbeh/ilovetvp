@@ -29,6 +29,7 @@
                 http.onreadystatechange = function () {
                     if (http.readyState == 4) {
                         if (http.status == 200) {
+                            try {
                             var curr_date = new Date().getTime();
                             var curr_damage = parseInt(http.responseText);
                             status('');
@@ -45,7 +46,9 @@
                                 avg_damage = ((15000 - diff_date) * avg_damage + diff_date * diff_damage) / 15000;
 
                             dps.append(last_date, avg_damage);
-
+                            } catch (e) {
+                                status('Exception: ' + e.message + '<br/>Response: ' + http.responseText);
+                            }
                         } else
                             status('HTTP Return code unexpected: ' + http.status);
 
