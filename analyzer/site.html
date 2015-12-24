@@ -46,7 +46,8 @@
 
                             dps.append(last_date, avg_damage);
 
-                        }
+                        } else
+                            status('HTTP Return code unexpected: ' + http.status);
 
                         setTimeout(request, 100);
                     }
