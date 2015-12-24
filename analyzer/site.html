@@ -20,6 +20,7 @@
 
             window.onload = function () {
                 var graph = new SmoothieChart({ millisPerPixel: 100, interpolation: 'linear', grid: { millisPerLine: 5000, verticalSections: 7, borderVisible: false }, minValue: 0 });
+                resize();
                 graph.streamTo(document.getElementById('graph'));
 
                 var dps = new TimeSeries();
@@ -59,10 +60,37 @@
 
                 CCPEVE.requestTrust('http://ilovetvp.serverstaff.de:47617/');
             };
+
+            var resizeTimer;
+
+            function resize() {
+                if (typeof resizeTimer !== 'undefined')
+                    delete resizeTimer;
+
+                var canvas = document.getElementById('graph');
+                if (canvas !== null) {
+                    canvas.height = window.innerHeight - 4;
+                    canvas.width = window.innerWidth;
+                }
+            }
+
+            window.onresize = function () {
+                if (typeof resizeTimer !== 'undefined')
+                    clearTimeout(resizeTimer);
+
+                resizeTimer = setTimeout(resize, 500);
+            };
         </script>
+        <style>
+            * {
+                margin: 0;
+                border: 0;
+                padding: 0;
+            }
+        </style>
     </head>
     <body>
         <div id="status">Please open this website in your EVE client's browser.</div>
-        <canvas id="graph" width="600" height="250"></canvas>
+        <canvas id="graph"></canvas>
     </body>
 </html>
