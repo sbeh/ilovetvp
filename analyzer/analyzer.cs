@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace ilovetvp
 {
@@ -91,9 +92,25 @@ namespace ilovetvp
                     character.endpoint = endpoint;
 
                     Action<Event[]> callback = null;
+
+                    var done = false;
+
+                    new Timer(s =>
+                    {
+                        callback(null);
+                    }, null, 5000, Timeout.Infinite);
+
                     callback = evs =>
                     {
                         try {
+                            lock (response)
+                            {
+                                if (done)
+                                    return;
+
+                                done = true;
+                            }
+
                             character.EventAdded -= callback;
 
                             if (evs != null)
