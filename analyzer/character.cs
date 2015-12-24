@@ -60,13 +60,15 @@ namespace ilovetvp
         }
 
         #region Event
-        private List<Event> events = new List<Event>();
+        private Stack<Event> events = new Stack<Event>();
 
-        public event Action<Event> EventAdded;
+        public event Action<Event[]> EventAdded;
 
         public void addEvent(Event e)
         {
-            //events.Add(e);
+            while (events.Count >= 200)
+                events.Pop();
+            events.Push(e);
 
             try
             {
@@ -76,7 +78,10 @@ namespace ilovetvp
 
             var listener = EventAdded;
             if (listener != null)
-                listener(e);
+            {
+                listener(events.ToArray());
+                events.Clear();
+            }
         }
         #endregion
 

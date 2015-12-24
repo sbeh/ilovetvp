@@ -90,8 +90,8 @@ namespace ilovetvp
                     var character = Character.get(request.Headers[@"EVE_CHARNAME"]);
                     character.endpoint = endpoint;
 
-                    Action<Event> callback = null;
-                    callback = ev =>
+                    Action<Event[]> callback = null;
+                    callback = evs =>
                     {
                         try {
                             response.Close(Encoding.UTF8.GetBytes(character.damage.ToString()), false);
@@ -113,10 +113,17 @@ namespace ilovetvp
 
                     response.SendChunked = true;
 
-                    Action<Event> callback = null;
-                    callback = ev =>
+                    Action<Event[]> callback = null;
+                    callback = evs =>
                     {
-                        var buffer = Encoding.UTF8.GetBytes(ev.ToString() + @"<br />");
+                        var body = new StringBuilder();
+                        foreach (var ev in evs)
+                        {
+                            body.Append(ev.ToString());
+                            body.Append(@"<br />");
+                        }
+
+                        var buffer = Encoding.UTF8.GetBytes(body.ToString());
                         try
                         {
                             response.OutputStream.Write(buffer, 0, buffer.Length);
