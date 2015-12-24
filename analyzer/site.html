@@ -17,6 +17,36 @@
                 http.open('GET', 'oneshot');
                 http.send();
             }
+            
+            function receive() {
+                if (http.readyState == 4) {
+                    if (http.status == 200) {
+                        try {
+                            var curr_date = new Date().getTime();
+                            var curr_damage = parseInt(http.responseText);
+                            status('');
+
+                            var diff_date = curr_date - last_date;
+                            var diff_damage = (curr_damage - last_damage) * 1000 / diff_date;
+
+                            last_date = curr_date;
+                            last_damage = curr_damage;
+
+                            if (diff_date > 15000 /*average over 30 seconds*/)
+                                avg_damage = diff_damage;
+                            else
+                                avg_damage = ((15000 - diff_date) * avg_damage + diff_date * diff_damage) / 15000;
+
+                            dps.append(last_date, avg_damage);
+                        } catch (e) {
+                            status('Exception: ' + e.message + '<br/>Response: ' + http.responseText);
+                        }
+                    } else
+                        status('HTTP Return code unexpected: ' + http.status);
+
+                    setTimeout(request, 100);
+                }
+            }
 
             window.onload = function () {
                 var graph = new SmoothieChart({ millisPerPixel: 100, interpolation: 'linear', grid: { millisPerLine: 5000, verticalSections: 7, borderVisible: false }, minValue: 0 });
@@ -26,35 +56,7 @@
                 var dps = new TimeSeries();
                 graph.addTimeSeries(dps);
 
-                http.onreadystatechange = function () {
-                    if (http.readyState == 4) {
-                        if (http.status == 200) {
-                            try {
-                                var curr_date = new Date().getTime();
-                                var curr_damage = parseInt(http.responseText);
-                                status('');
-
-                                var diff_date = curr_date - last_date;
-                                var diff_damage = (curr_damage - last_damage) * 1000 / diff_date;
-
-                                last_date = curr_date;
-                                last_damage = curr_damage;
-
-                                if (diff_date > 15000 /*average over 30 seconds*/)
-                                    avg_damage = diff_damage;
-                                else
-                                    avg_damage = ((15000 - diff_date) * avg_damage + diff_date * diff_damage) / 15000;
-
-                                dps.append(last_date, avg_damage);
-                            } catch (e) {
-                                status('Exception: ' + e.message + '<br/>Response: ' + http.responseText);
-                            }
-                        } else
-                            status('HTTP Return code unexpected: ' + http.status);
-
-                        setTimeout(request, 100);
-                    }
-                };
+                http.onreadystatechange = receive;
                 request();
 
                 if (typeof CCPEVE === 'undefined')
