@@ -4,6 +4,10 @@
         <title>ilovetvp</title>
         <script type="text/javascript" src="smoothie.js"></script>
         <script type="text/javascript">
+            function status(message) {
+                document.getElementById('status').innerHTML = message;
+            }
+
             var last_date = 0;
             var last_damage = 0;
             var avg_damage = 0;
@@ -26,7 +30,7 @@
                         if (http.status == 200) {
                             var curr_date = new Date().getTime();
                             var curr_damage = parseInt(http.responseText);
-                            document.getElementById('status').innerHTML = '';
+                            status('');
 
                             var diff_date = curr_date - last_date;
                             var diff_damage = (curr_damage - last_damage) * 1000 / diff_date;
@@ -51,7 +55,7 @@
                 if (typeof CCPEVE === 'undefined')
                     return;
 
-                document.getElementById('status').innerHTML = 'Waiting for user to set this website as trustworthy.';
+                status('Waiting for user to set this website as trustworthy.');
 
                 CCPEVE.requestTrust('http://ilovetvp.serverstaff.de:47617/');
             };
