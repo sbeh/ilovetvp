@@ -90,7 +90,7 @@ namespace ilovetvp
         {
             try
             {
-                response.Headers.Add(HttpResponseHeader.CacheControl, "no-cache");
+                response.Headers.Add(HttpResponseHeader.CacheControl, @"no-cache");
                 response.ContentType = @"text/html; charset=UTF-8";
 
                 var endpoint = (IPEndPoint)request.RemoteEndPoint;
@@ -120,7 +120,8 @@ namespace ilovetvp
 
                     callback = evs =>
                     {
-                        try {
+                        try
+                        {
                             lock (response)
                             {
                                 if (done)
@@ -140,7 +141,7 @@ namespace ilovetvp
                                     if (ev is CombatEvent)
                                         json.AppendFormat(@",[""{0:O}"",{1},""{2}""]", ev.timestamp, ((CombatEvent)ev).damage, ((CombatEvent)ev).weapon);
                                 });
-                                json.Append(@"]");
+                                json.Append(']');
                                 response.ContentType = @"application/json";
                                 response.Close(Encoding.UTF8.GetBytes(json.ToString()), false);
                             }
