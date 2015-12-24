@@ -19,7 +19,11 @@ namespace ilovetvp
 
         static void Main()
         {
+#if TEST
+            var gamelogs = @"..\..\..\server\bin\Debug";
+#else
             var gamelogs = Environment.CurrentDirectory;
+#endif
 
 #if !NO_DB
             db.Open();
@@ -46,7 +50,11 @@ namespace ilovetvp
             gamelogs_watcher.EnableRaisingEvents = true;
 
             var http = new HttpListener();
+#if TEST
+            http.Prefixes.Add(@"http://localhost:47617/");
+#else
             http.Prefixes.Add(@"http://ilovetvp.serverstaff.de:47617/");
+#endif
             http.Start();
             AsyncCallback callback = null;
             callback = result =>
@@ -74,6 +82,10 @@ namespace ilovetvp
             http.Stop();
         }
 
+#if TEST
+        static Random rnd = new Random();
+#endif
+
         private static void handle(HttpListenerContext context, HttpListenerRequest request, HttpListenerResponse response)
         {
             try
@@ -86,7 +98,11 @@ namespace ilovetvp
 
                 if(param.Equals(@"/site.html") || param.Equals(@"/smoothie.js"))
                 {
-                    response.Close(System.IO.File.ReadAllBytes(param.Substring(1)), false);
+                    response.Close(System.IO.File.ReadAllBytes(
+#if TEST
+                        @"..\..\" +
+#endif
+                        param.Substring(1)), false);
                 }
                 else if(param.Equals(@"/oneshot") && request.Headers[@"EVE_CHARNAME"] != null)
                 {
