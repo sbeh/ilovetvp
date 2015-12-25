@@ -10,7 +10,7 @@
                 document.body.innerHTML = message;
             }
 
-            var http = new XMLHttpRequest();
+            var http;
 
             function request() {
                 http.open('GET', 'oneshot');
@@ -111,6 +111,7 @@
             }
 
             window.onload = function () {
+                http = new XMLHttpRequest();
                 http.onreadystatechange = receive;
                 request();
 
