@@ -19,6 +19,50 @@
             
             var graph;
 
+            var timeseries = {};
+            timeseries.addAll = function () {
+                var ignore = ['addAll', 'add', 'get'];
+
+                Object.keys(this).forEach(function (weapon) {
+                    if (ignore.indexOf(weapon) === -1)
+                        this.add(weapon);
+                });
+            }
+            timeseries.add = function (weapon) {
+                if (typeof graph !== 'undefined') {
+                    var colors = ['Blue', 'Aqua', 'Green', 'Yellow', 'Fuchsia', 'Purple'];
+                    graph.addTimeSeries(
+                        this[weapon],
+                        {
+                            strokeStyle: colors[
+                                Math.min(
+                                    Object.keys(this).length - 3/*addAll,add,get*/,
+                                    colors.length) %
+                                colors.length
+                            ]
+                        });
+                }
+            };
+            timeseries.get = function (weapon) {
+                if (typeof this[weapon] === 'undefined') {
+                    this[weapon] = new TimeSeries();
+
+                    this.add(weapon);
+                }
+
+                return this[weapon];
+            };
+
+            function process(json) {
+                for (var i = 1; i < json.length; ++i) {
+                    var timestamp = Date.parse(json[i][0]);
+                    var damage = json[i][1];
+                    var weapon = json[i][2];
+
+                    timeseries.get(weapon).append(timestamp, damage);
+                }
+            }
+
             function receive() {
                 if (http.readyState == 4) {
                     if (http.status == 200) {
@@ -50,7 +94,11 @@
                                     resize();
 
                                     graph.streamTo(document.getElementById('graph'));
+
+                                    timeseries.addAll();
                                 }
+
+                                process(json);
                             }
                         } catch (e) {
                             status('Exception: ' + e.message + '<br/>Response: ' + http.responseText);
