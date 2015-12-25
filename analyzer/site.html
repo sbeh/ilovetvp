@@ -5,7 +5,7 @@
         <script type="text/javascript" src="smoothie.js"></script>
         <script type="text/javascript">
             function status(message) {
-                document.getElementById('status').innerHTML = message;
+                document.body.innerHTML = message;
             }
 
             var http = new XMLHttpRequest();
@@ -19,7 +19,6 @@
                 if (http.readyState == 4) {
                     if (http.status == 200) {
                         try {
-                            status('');
                         } catch (e) {
                             status('Exception: ' + e.message + '<br/>Response: ' + http.responseText);
                         }
@@ -75,7 +74,6 @@
         </style>
     </head>
     <body>
-        <div id="status">Please open this website in your EVE client's browser.</div>
-        <canvas id="graph"></canvas>
+        Please open this website in your EVE client's browser.
     </body>
 </html>
