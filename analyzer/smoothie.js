@@ -726,6 +726,11 @@
               context.lineTo(x,y);
               break;
             }
+              case "dot": {
+                  var radius = 2;
+                  context.moveTo(x + radius, y);
+                  context.arc(x, y, radius, 0, 2 * Math.PI);
+              }
           }
         }
 
