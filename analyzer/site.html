@@ -5,6 +5,8 @@
         <script type="text/javascript" src="smoothie.js"></script>
         <script type="text/javascript">
             function status(message) {
+                delete graph;
+
                 document.body.innerHTML = message;
             }
 
@@ -15,6 +17,8 @@
                 http.send();
             }
             
+            var graph;
+
             function receive() {
                 if (http.readyState == 4) {
                     if (http.status == 200) {
@@ -28,6 +32,26 @@
 
                             if (json === null)
                                 status('HTTP Response empty');
+                            else {
+                                if (typeof graph === 'undefined') {
+                                    graph = new SmoothieChart({
+                                        millisPerPixel: 100,
+                                        interpolation: 'dot',
+                                        grid: {
+                                            millisPerLine: 5000,
+                                            verticalSections: 7,
+                                            borderVisible: false
+                                        },
+                                        minValue: 0
+                                    });
+
+                                    document.body.innerHTML = '<canvas id="graph" />';
+
+                                    resize();
+
+                                    graph.streamTo(document.getElementById('graph'));
+                                }
+                            }
                         } catch (e) {
                             status('Exception: ' + e.message + '<br/>Response: ' + http.responseText);
                         }
@@ -39,10 +63,6 @@
             }
 
             window.onload = function () {
-                var graph = new SmoothieChart({ millisPerPixel: 100, interpolation: 'linear', grid: { millisPerLine: 5000, verticalSections: 7, borderVisible: false }, minValue: 0 });
-                resize();
-                graph.streamTo(document.getElementById('graph'));
-
                 http.onreadystatechange = receive;
                 request();
 
