@@ -19,6 +19,15 @@
                 if (http.readyState == 4) {
                     if (http.status == 200) {
                         try {
+                            var json = null;
+                            if (typeof http.response === 'undefined') {
+                                if (http.responseText.length > 0)
+                                    json = JSON.parse(http.responseText);
+                            } else
+                                json = http.response;
+
+                            if (json === null)
+                                status('HTTP Response empty');
                         } catch (e) {
                             status('Exception: ' + e.message + '<br/>Response: ' + http.responseText);
                         }
