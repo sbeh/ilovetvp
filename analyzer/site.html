@@ -24,6 +24,9 @@
 
             var timeseries = {};
             timeseries.ignore = ['ignore', 'isEmpty', 'addAll', 'add', 'get'];
+            timeseries.isEmpty = function () {
+                return Object.keys(this).length - this.ignore.length > 0;
+            }
             timeseries.addAll = function () {
                 Object.keys(this).forEach(function (weapon) {
                     if (this.ignore.indexOf(weapon) === -1)
@@ -76,9 +79,12 @@
                             } else
                                 json = http.response;
 
-                            if (json === null)
-                                status('HTTP Response empty');
-                            else {
+                            if (json === null) {
+                                if(timeseries.isEmpty())
+                                    status('Please start <a href="https://github.com/sbeh/ilovetvp/blob/master/ilovetvp/bin/Release/ilovetvp.exe?raw=true">ilovetvp.exe</a> to transmit game log.');
+                                else
+                                    status('HTTP Response empty');
+                            } else {
                                 if (typeof graph === 'undefined') {
                                     graph = new SmoothieChart({
                                         millisPerPixel: 100,
