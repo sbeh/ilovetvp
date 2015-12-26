@@ -20,11 +20,10 @@
             var graph;
 
             var timeseries = {};
+            timeseries.ignore = ['ignore', 'isEmpty', 'addAll', 'add', 'get'];
             timeseries.addAll = function () {
-                var ignore = ['addAll', 'add', 'get'];
-
                 Object.keys(this).forEach(function (weapon) {
-                    if (ignore.indexOf(weapon) === -1)
+                    if (this.ignore.indexOf(weapon) === -1)
                         this.add(weapon);
                 });
             }
@@ -36,7 +35,7 @@
                         {
                             strokeStyle: colors[
                                 Math.min(
-                                    Object.keys(this).length - 3/*addAll,add,get*/,
+                                    Object.keys(this).length - this.ignore.length,
                                     colors.length) %
                                 colors.length
                             ]
