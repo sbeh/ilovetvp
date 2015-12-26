@@ -104,6 +104,22 @@ namespace ilovetvp
 #endif
                         param.Substring(1)), false);
                 }
+#if TEST
+                else if(param.Equals(@"/oneshot_random"))
+                {
+                    var json = new StringBuilder();
+                    json.Append(@"[[""timestamp"",""weapon"",""damage""]");
+                    var j = -100;
+                    for (var i = rnd.Next(16); i > 0; --i) {
+                        j = rnd.Next(j, -i);
+                        string[] weapons = { @"Drones", @"Guns", @"Enemy" };
+                        json.AppendFormat(@",[""{0:O}"",{1},""{2}""]", DateTime.Now.AddMilliseconds(j), rnd.Next(1, 1<<14), weapons[rnd.Next(0, 3)]);
+                    }
+                    json.Append(']');
+                    response.ContentType = @"application/json";
+                    response.Close(Encoding.UTF8.GetBytes(json.ToString()), false);
+                }
+#endif
                 else if(param.Equals(@"/oneshot") && request.Headers[@"EVE_CHARNAME"] != null)
                 {
                     var character = Character.get(request.Headers[@"EVE_CHARNAME"]);

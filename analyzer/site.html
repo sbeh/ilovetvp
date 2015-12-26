@@ -13,7 +13,10 @@
             var http;
 
             function request() {
-                http.open('GET', 'oneshot');
+                if (typeof CCPEVE === 'undefined')
+                    http.open('GET', 'oneshot_random');
+                else
+                    http.open('GET', 'oneshot');
                 http.send();
             }
             
