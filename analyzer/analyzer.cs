@@ -158,7 +158,7 @@ namespace ilovetvp
                                         json.AppendFormat(@",[""{0:O}"",{1},""{2}""]", ev.timestamp, ((CombatEvent)ev).damage, ((CombatEvent)ev).weapon);
                                 });
                                 json.Append(']');
-                                response.ContentType = @"application/json";
+                                response.ContentType = @"application/json; charset=UTF-8";
                                 response.Close(Encoding.UTF8.GetBytes(json.ToString()), false);
                             }
                             else
