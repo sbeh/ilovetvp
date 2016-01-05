@@ -136,8 +136,11 @@
             var resizeTimer;
 
             function resize() {
-                if (typeof resizeTimer !== 'undefined')
+                if (typeof resizeTimer !== 'undefined') {
+                    clearTimeout(resizeTimer);
+
                     delete resizeTimer;
+                }
 
                 var canvas = document.getElementById('graph');
                 if (canvas !== null) {
