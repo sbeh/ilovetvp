@@ -120,6 +120,7 @@
 
             window.onload = function () {
                 http = new XMLHttpRequest();
+                http.responseType = "json";
                 http.onreadystatechange = receive;
                 request();
 
