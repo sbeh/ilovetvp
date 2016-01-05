@@ -110,7 +110,7 @@
                                 process(json);
                             }
                         } catch (e) {
-                            status('Exception: ' + e.message + '<br/>Response: ' + http.responseText);
+                            status('Exception: <pre>' + (typeof e.stack === 'undefined' ? e : e.stack) + '</pre><br/>Response: ' + http.responseText);
                         }
                     } else
                         status('HTTP Return code unexpected: ' + http.status);
