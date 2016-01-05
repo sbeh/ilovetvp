@@ -28,9 +28,10 @@
                 return Object.keys(this).length - this.ignore.length > 0;
             }
             timeseries.addAll = function () {
+                var that = this;
                 Object.keys(this).forEach(function (weapon) {
-                    if (this.ignore.indexOf(weapon) === -1)
-                        this.add(weapon);
+                    if (that.ignore.indexOf(weapon) === -1)
+                        that.add(weapon);
                 });
             }
             timeseries.add = function (weapon) {
