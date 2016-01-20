@@ -120,8 +120,15 @@ namespace ilovetvp
                     response.Close(Encoding.UTF8.GetBytes(json.ToString()), false);
                 }
 #endif
-                else if(param.Equals(@"/oneshot") && request.Headers[@"EVE_CHARNAME"] != null)
+                else if(param.Equals(@"/oneshot"))
                 {
+                    if(request.Headers[@"EVE_CHARNAME"] == null)
+                    {
+                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        response.StatusDescription = @"Website need to be set trustworthy in your ingame browser.";
+                        response.Close();
+                    }
+
                     var character = Character.get(request.Headers[@"EVE_CHARNAME"]);
                     character.endpoint = endpoint;
 

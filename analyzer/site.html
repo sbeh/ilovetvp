@@ -112,7 +112,9 @@
                         } catch (e) {
                             status('Exception: <pre>' + (typeof e.stack === 'undefined' ? e : e.stack) + '</pre><br/>Response: ' + http.responseText);
                         }
-                    } else
+                    } else if (http.status === 401)
+                            ;
+                    else
                         status('HTTP Return code unexpected: ' + http.status);
 
                     setTimeout(request, 100);
