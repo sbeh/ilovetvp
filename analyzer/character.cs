@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+#if !NO_DB
 using System.Data;
 using System.Data.SqlClient;
+#endif
 using System.Net;
 
 namespace ilovetvp
