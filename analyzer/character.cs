@@ -27,7 +27,7 @@ namespace ilovetvp
         {
             set
             {
-                if(!object.Equals(_endpoint, value))
+                if (!object.Equals(_endpoint, value))
                     Util.debug(@"{0} connected from {1}:{2}", name, value.Address, value.Port);
 
                 _endpoint = value;
