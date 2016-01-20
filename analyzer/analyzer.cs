@@ -139,7 +139,7 @@ namespace ilovetvp
                     new Timer(s =>
                     {
                         callback(null);
-                    }, null, 5000, Timeout.Infinite);
+                    }, null, 10000, Timeout.Infinite);
 
                     callback = evs =>
                     {
