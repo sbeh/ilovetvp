@@ -30,6 +30,15 @@ namespace ilovetvp
                     enemy = match.Groups[@"enemy"].Value,
                     weapon = match.Groups[@"weapon"].Value,
                 };
+            else if ((match = regexp_damage.Match(message)).Success)
+                ret = new CombatEvent()
+                {
+                    character = character,
+                    timestamp = DateTime.SpecifyKind(DateTime.ParseExact(match.Groups[@"timestamp"].Value, @"yyyy.MM.dd HH:mm:ss", CultureInfo.InvariantCulture), DateTimeKind.Utc),
+                    incoming = true,
+                    damage = int.Parse(match.Groups[@"damage"].Value),
+                    weapon = @"Enemy",
+                };
             else
                 ret = new UnknownEvent()
                 {
@@ -44,6 +53,7 @@ namespace ilovetvp
         }
 
         private static Regex regexp_shot = new Regex(@"\[ (?<timestamp>\d\d\d\d\.\d\d\.\d\d \d\d:\d\d:\d\d) \] \(combat\) <color=0xff00ffff><b>(?<damage>\d+)</b> <color=0x77ffffff><font size=10>to</font> <b><color=0xffffffff>(?<enemy>[^<]+)</b><font size=10><color=0x77ffffff> - (?<weapon>.+(?= - ))", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        private static Regex regexp_damage = new Regex(@"\[ (?<timestamp>\d\d\d\d\.\d\d\.\d\d \d\d:\d\d:\d\d) \] \(combat\) <color=0xffcc0000><b>(?<damage>\d+)</b> <color=0x77ffffff><font size=10>from</font> <b><color=0xffffffff>", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
     }
 
     class CombatEvent : Event

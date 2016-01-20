@@ -32,17 +32,15 @@
             }
             timeseries.add = function (weapon) {
                 if (typeof graph !== 'undefined') {
-                    var colors = ['Blue', 'Aqua', 'Green', 'Yellow', 'Fuchsia', 'Purple'];
+                    var color = 'Red';
+                    if (weapon !== 'Enemy') {
+                        var colors = ['Blue', 'Aqua', 'Green', 'Yellow', 'Fuchsia', 'Purple'];
+                        color = colors[Math.min(this.weapons.length, colors.length) % colors.length];
+                    }
                     graph.addTimeSeries(
                         this[weapon],
-                        {
-                            strokeStyle: colors[
-                                Math.min(
-                                    Object.keys(this).length - this.ignore.length,
-                                    colors.length) %
-                                colors.length
-                            ]
-                        });
+                        { strokeStyle: color }
+                    );
                 }
             };
             timeseries.get = function (weapon) {
