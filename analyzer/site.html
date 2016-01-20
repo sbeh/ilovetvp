@@ -82,7 +82,12 @@
 
                             if (json === null) {
                                 if(timeseries.isEmpty())
-                                    status('Please start <a href="https://github.com/sbeh/ilovetvp/blob/master/ilovetvp/bin/Release/ilovetvp.exe?raw=true">ilovetvp.exe</a> to transmit game log.');
+                                    status(
+                                        'Start "ilovetvp.exe" to transmit game log.<br />' +
+                                        'You need to download this tool with your out of game browser.<br />' +
+                                        'Please use the follow link to download:<br /><br />' +
+                                        '<pre>https://github.com/sbeh/ilovetvp/blob/master/ilovetvp/bin/Release/ilovetvp.exe?raw=true</pre>'
+                                    );
                                 else
                                     status('HTTP Response empty');
                             } else {
