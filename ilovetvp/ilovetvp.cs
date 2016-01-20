@@ -18,7 +18,11 @@ namespace ilovetvp
                 {
                     connection = new TcpClient();
                     connection.SendTimeout = 15;
+#if TEST
+                    connection.Connect(@"localhost", 47616);
+#else
                     connection.Connect(@"ilovetvp.serverstaff.de", 47616);
+#endif
                 }
                 catch (Exception e)
                 {
@@ -145,7 +149,11 @@ namespace ilovetvp
                         {
                             connection = new TcpClient();
                             connection.SendTimeout = 15;
+#if TEST
+                            connection.Connect(@"localhost", 47616);
+#else
                             connection.Connect(@"ilovetvp.serverstaff.de", 47616);
+#endif
                         }
                         catch (Exception exc)
                         {
