@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 #if !NO_DB
 using System.Data.SqlClient;
 #endif
@@ -157,13 +158,28 @@ namespace ilovetvp
 
                             if (evs != null)
                             {
-                                var json = new StringBuilder();
-                                json.Append(@"[[""timestamp"",""weapon"",""damage""]");
-                                Array.ForEach(evs, ev =>
+                                var ces = new Stack<CombatEvent>();
+
+                                foreach (var ev in evs)
                                 {
                                     if (ev is CombatEvent)
-                                        json.AppendFormat(@",[{0},{1},""{2}""]", (long)ev.timestamp.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds, ((CombatEvent)ev).damage, ((CombatEvent)ev).weapon);
-                                });
+                                        ces.Push((CombatEvent)ev);
+                                }
+
+                                if (ces.Count == 0)
+                                {
+                                    done = false;
+                                    character.EventAdded += callback;
+
+                                    return;
+                                }
+
+                                var json = new StringBuilder();
+                                json.Append(@"[[""timestamp"",""weapon"",""damage""]");
+
+                                foreach (var ce in ces)
+                                    json.AppendFormat(@",[{0},{1},""{2}""]", (long)ce.timestamp.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds, ce.damage, ce.weapon);
+
                                 json.Append(']');
                                 response.ContentType = @"application/json; charset=UTF-8";
                                 response.Close(Encoding.UTF8.GetBytes(json.ToString()), false);
