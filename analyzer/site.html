@@ -23,16 +23,12 @@
             var graph;
 
             var timeseries = {};
-            timeseries.ignore = ['ignore', 'isEmpty', 'addAll', 'add', 'get'];
+            timeseries.weapons = [];
             timeseries.isEmpty = function () {
-                return Object.keys(this).length - this.ignore.length > 0;
+                return this.weapons.length === 0;
             }
             timeseries.addAll = function () {
-                var that = this;
-                Object.keys(this).forEach(function (weapon) {
-                    if (that.ignore.indexOf(weapon) === -1)
-                        that.add(weapon);
-                });
+                this.weapons.forEach(this.add);
             }
             timeseries.add = function (weapon) {
                 if (typeof graph !== 'undefined') {
@@ -51,6 +47,7 @@
             };
             timeseries.get = function (weapon) {
                 if (typeof this[weapon] === 'undefined') {
+                    this.weapons.push(weapon);
                     this[weapon] = new TimeSeries();
 
                     this.add(weapon);
