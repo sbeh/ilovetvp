@@ -173,7 +173,7 @@ namespace ilovetvp
                         }
                         catch (Exception ex)
                         {
-                            Util.debug(@"{0,15}:{1,-5} | {2} | Failed to write: {2}", endpoint.Address, endpoint.Port, character, ex.Message);
+                            Util.debug(@"{0,15}:{1,-5} | {2} | Failed to write: {3}", endpoint.Address, endpoint.Port, character.name, ex.Message);
                         }
                     };
                     character.EventAdded += callback;
