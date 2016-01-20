@@ -37,16 +37,20 @@
                         var colors = ['Blue', 'Aqua', 'Green', 'Yellow', 'Fuchsia', 'Purple'];
                         color = colors[Math.min(this.weapons.length, colors.length) % colors.length];
                     }
-                    graph.addTimeSeries(
-                        this[weapon],
-                        { strokeStyle: color }
-                    );
+
+                    for (var i = 0; i < graph.length; ++i)
+                        graph[i].addTimeSeries(
+                            this[weapon][i],
+                            { strokeStyle: color }
+                        );
                 }
             };
             timeseries.get = function (weapon) {
                 if (typeof this[weapon] === 'undefined') {
                     this.weapons.push(weapon);
-                    this[weapon] = new TimeSeries();
+                    this[weapon] = new Array(graph.length);
+                    for (var i = 0; i < graph.length; ++i)
+                        this[weapon][i] = new TimeSeries();
 
                     this.add(weapon);
                 }
@@ -60,7 +64,8 @@
                     var damage = json[i][1];
                     var weapon = json[i][2];
 
-                    timeseries.get(weapon).append(timestamp, damage);
+                    for (var j = 0; j < graph.length; ++j)
+                        timeseries.get(weapon)[j].append(timestamp, damage);
                 }
             }
 
@@ -87,22 +92,14 @@
                                     status('HTTP Response empty');
                             } else {
                                 if (typeof graph === 'undefined') {
-                                    graph = new SmoothieChart({
-                                        millisPerPixel: 100,
-                                        interpolation: 'dot',
-                                        grid: {
-                                            millisPerLine: 5000,
-                                            verticalSections: 7,
-                                            borderVisible: false
-                                        },
-                                        minValue: 0
-                                    });
+                                    graph = new Array(3);
 
-                                    document.body.innerHTML = '<canvas id="graph" />';
+                                    var body = '';
+                                    for(var i = 0; i < graph.length; ++i)
+                                        body += '<canvas id="graph_' + (graph.length - 1 - i) + '"></canvas>';
+                                    document.body.innerHTML = body;
 
                                     resize();
-
-                                    graph.streamTo(document.getElementById('graph'));
 
                                     timeseries.addAll();
                                 }
@@ -148,10 +145,43 @@
                     delete resizeTimer;
                 }
 
-                var canvas = document.getElementById('graph');
-                if (canvas !== null) {
-                    canvas.height = window.innerHeight - 4;
-                    canvas.width = window.innerWidth;
+                for (var i = 0; i < graph.length; ++i) {
+                    var canvas = document.getElementById('graph_' + i);
+                    if (canvas === null)
+                        return;
+                }
+
+                for (var i = 0; i < graph.length; ++i) {
+                    var canvas = document.getElementById('graph_' + i);
+                    canvas.height = window.innerHeight - 5;
+                    canvas.width = window.innerWidth / graph.length - 1;
+
+                    var times = [
+                        [               2 * 60 * 1000,               20 * 1000],
+                        [              20 * 60 * 1000,           5 * 60 * 1000],
+                        [          8 * 60 * 60 * 1000,      1 * 60 * 60 * 1000],
+                        [ 2 * 7 * 24 * 60 * 60 * 1000,     24 * 60 * 60 * 1000],
+                        [12 * 7 * 24 * 60 * 60 * 1000, 7 * 24 * 60 * 60 * 1000]
+                    ];
+                    /*for (var t = 0; t < times.length; ++t) {
+                        times[t][0] /= 100;
+                        times[t][1] /= 100;
+                    }*/
+                    delete graph[i];
+                    graph[i] = new SmoothieChart({
+                        millisPerPixel: times[i][0] / canvas.width,
+                        interpolation: 'dot',
+                        grid: {
+                            millisPerLine: times[i][1],
+                            verticalSections: 7,
+                            borderVisible: false
+                        },
+                        minValue: 0
+                    });
+                    var delay = 0;
+                    for (var t = 0; t < i; ++t)
+                        delay += times[t][0];
+                    graph[i].streamTo(canvas, delay);
                 }
             }
 
@@ -167,6 +197,9 @@
                 margin: 0;
                 border: 0;
                 padding: 0;
+            }
+            canvas {
+                border-left-width: 1px;
             }
         </style>
     </head>
