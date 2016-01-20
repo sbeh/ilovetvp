@@ -115,7 +115,11 @@
                                 process(json);
                             }
                         } catch (e) {
-                            status('Exception: <pre>' + (typeof e.stack === 'undefined' ? e : e.stack) + '</pre><br/>Response: ' + http.responseText);
+                            try {
+                                status('Exception: <pre>' + (typeof e.stack === 'undefined' ? e : e.stack) + '</pre><br/>Response: ' + http.responseText);
+                            } catch(e_) {
+                                status('Exception: <pre>' + (typeof e.stack === 'undefined' ? e : e.stack) + '</pre>');
+                            }
                         }
                     } else if (http.status === 401)
                             ;
