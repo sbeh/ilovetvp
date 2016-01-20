@@ -113,7 +113,7 @@ namespace ilovetvp
                     for (var i = rnd.Next(16); i > 0; --i) {
                         j = rnd.Next(j, -i);
                         string[] weapons = { @"Drones", @"Guns", @"Enemy" };
-                        json.AppendFormat(@",[""{0:O}"",{1},""{2}""]", DateTime.Now.AddMilliseconds(j), rnd.Next(1, 1<<14), weapons[rnd.Next(0, 3)]);
+                        json.AppendFormat(@",[{0},{1},""{2}""]", (long)DateTime.UtcNow.AddMilliseconds(j).Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds, rnd.Next(1, 1<<14), weapons[rnd.Next(0, 3)]);
                     }
                     json.Append(']');
                     response.ContentType = @"application/json";
@@ -162,7 +162,7 @@ namespace ilovetvp
                                 Array.ForEach(evs, ev =>
                                 {
                                     if (ev is CombatEvent)
-                                        json.AppendFormat(@",[""{0:O}"",{1},""{2}""]", ev.timestamp, ((CombatEvent)ev).damage, ((CombatEvent)ev).weapon);
+                                        json.AppendFormat(@",[{0},{1},""{2}""]", (long)ev.timestamp.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds, ((CombatEvent)ev).damage, ((CombatEvent)ev).weapon);
                                 });
                                 json.Append(']');
                                 response.ContentType = @"application/json; charset=UTF-8";

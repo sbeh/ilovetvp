@@ -58,7 +58,7 @@
 
             function process(json) {
                 for (var i = 1; i < json.length; ++i) {
-                    var timestamp = Date.parse(json[i][0]);
+                    var timestamp = new Date(json[i][0]);
                     var damage = json[i][1];
                     var weapon = json[i][2];
 
