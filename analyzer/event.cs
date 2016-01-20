@@ -20,15 +20,15 @@ namespace ilovetvp
         {
             Event ret;
 
-            var match_shot = regexp_shot.Match(message);
-            if (match_shot.Success)
+            Match match;
+            if ((match = regexp_shot.Match(message)).Success)
                 ret = new CombatEvent()
                 {
                     character = character,
-                    timestamp = DateTime.SpecifyKind(DateTime.ParseExact(match_shot.Groups[@"timestamp"].Value, @"yyyy.MM.dd HH:mm:ss", CultureInfo.InvariantCulture), DateTimeKind.Utc),
-                    damage = int.Parse(match_shot.Groups[@"damage"].Value),
-                    enemy = match_shot.Groups[@"enemy"].Value,
-                    weapon = match_shot.Groups[@"weapon"].Value,
+                    timestamp = DateTime.SpecifyKind(DateTime.ParseExact(match.Groups[@"timestamp"].Value, @"yyyy.MM.dd HH:mm:ss", CultureInfo.InvariantCulture), DateTimeKind.Utc),
+                    damage = int.Parse(match.Groups[@"damage"].Value),
+                    enemy = match.Groups[@"enemy"].Value,
+                    weapon = match.Groups[@"weapon"].Value,
                 };
             else
                 ret = new UnknownEvent()
